@@ -3,10 +3,10 @@ from fastapi.responses import JSONResponse
 
 class DocumentHandler:
     def __init__(self, options):
-        self.keyLength = options['keyLength'] or 10;
-        self.maxLength = options['maxLength'] # none by default
-        self.store = options['store']
-        self.keyGenerator = options['keyGenerator']
+        self.keyLength = options.keyLength or 10;
+        self.maxLength = options.maxLength # none by default
+        self.store = options.store
+        self.keyGenerator = options.keyGenerator
 
 
     async def handleGet(self, request, response, config):

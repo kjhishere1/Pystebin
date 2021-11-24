@@ -60,12 +60,12 @@ keyGenerator = generator.gen()
 
 
 ## Configure the document handler
-documentHandler = DocumentHandler({
+documentHandler = DocumentHandler(Config({
     'store': preferredStore,
     'maxLength': config.maxLength,
     'keyLength': config.keyLength,
     'keyGenerator': keyGenerator
-})
+}))
 
 
 app = FastAPI()
