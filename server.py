@@ -4,18 +4,17 @@ import json
 import logging
 
 from importlib import import_module
-from ilio import read
 
 from fastapi import FastAPI, Request, Response
 from fastapi.staticfiles import StaticFiles
-from starlette.responses import RedirectResponse
 
 from lib.config import Config
 from lib.document_handler import DocumentHandler
 
 ## Load the configuration and set some defaults
-configPath = 'config.json' if (len(sys.argv) <= 2) else sys.argv[2]
-with open(configPath, 'r', encoding='UTF-8') as config: config = Config(json.loads(config.read()))
+configPath = 'config.json'
+with open(configPath, 'r', encoding='UTF-8') as config_file:
+    config = Config(json.loads(config_file.read()))
 config.port = os.getenv('PORT') or config.port or 7777
 config.host = os.getenv('HOST') or config.host or 'localhost'
 
@@ -24,17 +23,16 @@ config.host = os.getenv('HOST') or config.host or 'localhost'
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-stream_hander = logging.StreamHandler()
-stream_hander.setFormatter(formatter)
-logger.addHandler(stream_hander)
-
 
 ## build the store from the config on-demand - so that we don't load it
 ## for statics
-#
-#
+if not config.storage:
+    config.storage = Config({'type': 'file'})
+if not config.storage.type:
+    config.storage.type = 'file'
+
+store = import_module('lib.document_stores.' + config.storage.type)
+preferredStore = store.Store(config.storage)
 
 
 ## Compress the static javascript assets
@@ -43,8 +41,15 @@ logger.addHandler(stream_hander)
 
 
 ## Send the static documents into the preferred store, skipping expirations
-#
-#
+for name in config.documents.dict:
+    path = config.documents.dict[name]
+    with open(path, 'r', encoding='UTF-8') as data: data = data.read()
+    logger.info('loading static document', f"name: {name}, path: {path}")
+
+    if data:
+        preferredStore.set(name, data, True)
+    else:
+        logger.warn('failed to load static document', f"name: {name}, path: {path}")
 
 
 ## Pick up a key generator
@@ -56,10 +61,10 @@ keyGenerator = generator.gen()
 
 ## Configure the document handler
 documentHandler = DocumentHandler({
-  'store': preferredStore,
-  'maxLength': config.maxLength,
-  'keyLength': config.keyLength,
-  'keyGenerator': keyGenerator
+    'store': preferredStore,
+    'maxLength': config.maxLength,
+    'keyLength': config.keyLength,
+    'keyGenerator': keyGenerator
 })
 
 
@@ -67,30 +72,30 @@ app = FastAPI()
 
 ## first look at API calls
 ## get raw documents - support getting with extension
-@app.get("/raw/{doc_id}")
-async def raw_get(doc_id: str):
-    return doc_id
+@app.get("/raw/{id}")
+async def raw_get(request: Request, response: Response):
+    return documentHandler.handleRawGet(request, response, config)
 
-@app.head("/raw/{doc_id}")
-async def raw_head(doc_id: str):
-    return doc_id
-
+@app.head("/raw/{id}")
+async def raw_head(request: Request, response: Response):
+    return documentHandler.handleRawGet(request, response, config)
 
 ## add documents
 @app.post("/documents")
-async def docs():
-    return
-
+async def docs(request: Request, response: Response):
+    return documentHandler.handlePost(request, response)
 
 ## get documents
-@app.get("/documents/{doc_id}")
-async def docs_get(doc_id: str):
-    return doc_id
+@app.get("/documents/{id}")
+async def docs_get(request: Request, response: Response):
+    return documentHandler.handleGet(request, response, config)
 
-@app.head("/documents/{doc_id}")
-async def docs_head(doc_id: str):
-    return doc_id
+@app.head("/documents/{id}")
+async def docs_head(request: Request, response: Response):
+    return documentHandler.handleGet(request, response, config)
 
 
 ## And match index
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
+logger.info('listening on ' + config.host + ':' + str(config.port))

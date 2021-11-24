@@ -3,7 +3,7 @@ import json
 
 class Config(object):
     def __init__(self, json: dict):
-        self._json = json
+        self.dict = json
         for key in json:
             Type = type(json[key])
             if Type == str:
@@ -15,12 +15,10 @@ class Config(object):
 
 
     def __iter__(self):
-        for x, y in self._json.items():
+        for x, y in self.dict.items():
             yield x, y
 
 
-    def __getattribute__(self, name):
-        try:
-            return super(Config, self).__getattribute__(name)
-        except AttributeError as ae:
-            return None
+    def __getattr__(self, name):
+        setattr(self, name, None)
+        return None
