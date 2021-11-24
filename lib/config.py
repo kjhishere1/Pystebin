@@ -6,12 +6,10 @@ class Config(object):
         self.dict = json
         for key in json:
             Type = type(json[key])
-            if Type == str:
-                exec(f"self.{key} = '{json[key]}'")
-            elif Type == dict:
-                exec(f"self.{key} = Config({json[key]})")
+            if Type == dict:
+                setattr(self, key, Config(json[key]))
             else:
-                exec(f"self.{key} = {json[key]}")
+                setattr(self, key, json[key])
 
 
     def __iter__(self):
