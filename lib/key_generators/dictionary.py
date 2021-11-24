@@ -20,3 +20,5 @@ class DictionaryGenerator:
             index = math.floor(random.random() * len(self.dictionary))
             text += self.dictionary[index]
         return text
+
+gen = DictionaryGenerator

@@ -11,3 +11,5 @@ class RandomKeyGenerator:
             index = math.floor(random.random() * len(self.keyspace))
             text += self.keyspace[index]
         return text
+
+gen = RandomKeyGenerator

@@ -21,3 +21,5 @@ class PhoneticKeyGenerator:
           text += randConsonant() if (i % 2 == start) else randVowel()
 
       return text
+
+gen = PhoneticKeyGenerator

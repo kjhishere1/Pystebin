@@ -3,17 +3,20 @@ import sys
 import json
 import logging
 
-import js2py
+from importlib import import_module
 
 from fastapi import FastAPI, Request, Response
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import RedirectResponse
 
+from lib.config import Config
+from lib.document_handler import DocumentHandler
+
 ## Load the configuration and set some defaults
 configPath = 'config.json' if (len(sys.argv) <= 2) else sys.argv[2]
-config = json.loads(open(configPath, 'r', encoding='utf8').read())
-config['port'] = os.getenv('PORT') or config['port'] or 7777
-config['host'] = os.getenv('HOST') or config['host'] or 'localhost'
+config = Config(configPath)
+config.port = os.getenv('PORT') or config.port or 7777
+config.host = os.getenv('HOST') or config.host or 'localhost'
 
 
 ## Set up the logger
@@ -44,13 +47,19 @@ logger.addHandler(stream_hander)
 
 
 ## Pick up a key generator
-#
-#
+pwOptions = config.keyGenerator
+pwOptions.type = pwOptions.type or 'random'
+generator = import_module(f'lib.key_generators.' + pwOptions.type)
+keyGenerator = generator.gen()
 
 
 ## Configure the document handler
-#
-#
+documentHandler = DocumentHandler({
+  'store': preferredStore,
+  'maxLength': config.maxLength,
+  'keyLength': config.keyLength,
+  'keyGenerator': keyGenerator
+})
 
 
 app = FastAPI()
