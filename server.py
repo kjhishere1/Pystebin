@@ -15,7 +15,7 @@ from lib.document_handler import DocumentHandler
 
 ## Load the configuration and set some defaults
 configPath = 'config.json' if (len(sys.argv) <= 2) else sys.argv[2]
-with open(configPath, 'r', encoding='UTF-8') as config: config = config.read()
+with open(configPath, 'r', encoding='UTF-8') as config: config = Config(json.loads(config.read()))
 config.port = os.getenv('PORT') or config.port or 7777
 config.host = os.getenv('HOST') or config.host or 'localhost'
 
