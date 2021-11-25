@@ -1,1 +1,1 @@
-web: python server.py
+web: uvicorn server:app --workers 4

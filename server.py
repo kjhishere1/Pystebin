@@ -1,11 +1,12 @@
 import os
 import sys
 import json
+import uvicorn
 import logging
 
 from importlib import import_module
 
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request, Response, File, UploadFile
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import PlainTextResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -88,7 +89,8 @@ async def raw_head(request: Request, response: Response):
 ## add documents
 @app.post("/documents")
 async def docs(request: Request, response: Response):
-    return await documentHandler.handlePost(request, response)
+    buffer = await request.body()
+    return documentHandler.handlePost(request, response, buffer)
 
 ## get documents
 @app.get("/documents/{id}")
@@ -111,3 +113,6 @@ app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 logger.info('listening on ' + config.host + ':' + str(config.port))
+
+if __name__ == '__main__':
+    uvicorn.run("server:app", host=config.host, port=config.port, workers=4)

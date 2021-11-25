@@ -49,47 +49,46 @@ class DocumentHandler:
                 return JSONResponse(status_code=404, content=content, headers=headers)
 
 
-    async def handlePost(self, request, response):
-        buffer = ''
-        cancelled = False
+    def handlePost(self, request, response, buffer):
+        buffer = buffer.decode("utf-8") 
+        adding = lambda key: self.store.set(key, buffer)
 
-        async def onSuccess():
+        try:
             if self.maxLength and len(buffer) > self.maxLength:
                 cancelled = True
                 headers = {'content-type': 'application/json'}
                 content = {"message": 'Document exceeds maximum length.'}
-                return await JSONResponse(status_code=400, content=content, headers=headers)
-
-            async def adding(key):
-                ret = self.store.set(key, buffer)
+                return JSONResponse(status_code=400, content=content, headers=headers)
+            elif len(buffer) == 0:
+                cancelled = True
                 headers = {'content-type': 'application/json'}
-                if ret:
-                    content = {'key': key}
-                    return await JSONResponse(status_code=200, content=content, headers=headers)
-                else:
-                    content = {'message': 'Error adding document.'}
-                    return await JSONResponse(status_code=500, content=content, headers=headers)
-            self.chooseKey(adding)
+                content = {"message": 'Document must contain at least one letter of content.'}
+                return JSONResponse(status_code=400, content=content, headers=headers)
 
-        print('TEST')
-
-        ct = request.headers['content-type']
-        if ct and ct.split(';')[0] == 'multipart/form-data':
-            pass
-        else:
-            data = await request.json()
-            print(data)
-
+            ret, key = self.chooseKey(adding)
+            headers = {'content-type': 'application/json'}
+            if ret:
+                content = {'key': key}
+                return JSONResponse(status_code=200, content=content, headers=headers)
+            else:
+                content = {'message': 'Error adding document.'}
+                return JSONResponse(status_code=500, content=content, headers=headers)
+        except Exception:
+            headers = {'content-type': 'application/json'}
+            content = {"message": 'Connection error.'}
+            return JSONResponse(status_code=500, content=content, headers=headers)
 
 
-    def chooseKey(callback):
+
+    def chooseKey(self, callback):
         key = self.acceptableKey()
 
         ret = self.store.get(key, True)
         if ret:
             self.chooseKey(callback)
         else:
-            callback(key)
+            return callback(key), key
+
 
     def acceptableKey(self):
           return self.keyGenerator.createKey(self.keyLength)
