@@ -9,7 +9,7 @@ class DocumentHandler:
         self.keyGenerator = options.keyGenerator
 
 
-    async def handleGet(self, request, response, config):
+    def handleGet(self, request, response, config):
         key = request.path_params['id'].split('.')[0]
         skipExpire = bool(eval(f"config.documents.{key}"))
 
@@ -17,19 +17,19 @@ class DocumentHandler:
         headers = {'content-type': 'application/json'}
         if ret:
             if str(request.method) == 'HEAD':
-                return await JSONResponse(status_code=200, headers=headers)
+                return JSONResponse(status_code=200, headers=headers)
             else:
                 content = {"data": ret, "key": key}
-                return await JSONResponse(status_code=200, content=content, headers=headers)
+                return JSONResponse(status_code=200, content=content, headers=headers)
         else:
             if str(request.method) == 'HEAD':
-                return await JSONResponse(status_code=404, headers=headers)
+                return JSONResponse(status_code=404, headers=headers)
             else:
                 content = {"message": 'Document not found.'}
-                return await JSONResponse(status_code=404, content=content, headers=headers)
+                return JSONResponse(status_code=404, content=content, headers=headers)
 
 
-    async def handleRawGet(self, request, response, config):
+    def handleRawGet(self, request, response, config):
         key = request.path_params['id'].split('.')[0]
         skipExpire = bool(eval(f"config.documents.{key}"))
 
@@ -43,10 +43,10 @@ class DocumentHandler:
         else:
             headers = {'content-type': 'application/json'}
             if str(request.method) == 'HEAD':
-                return await JSONResponse(status_code=404, headers=headers)
+                return JSONResponse(status_code=404, headers=headers)
             else:
                 content = {"message": 'Document not found.'}
-                return await JSONResponse(status_code=404, content=content, headers=headers)
+                return JSONResponse(status_code=404, content=content, headers=headers)
 
 
     async def handlePost(self, request, response):

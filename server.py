@@ -83,7 +83,7 @@ async def raw_head(request: Request, response: Response):
 ## add documents
 @app.post("/documents")
 async def docs(request: Request, response: Response):
-    return documentHandler.handlePost(request, response)
+    return await documentHandler.handlePost(request, response)
 
 ## get documents
 @app.get("/documents/{id}")
