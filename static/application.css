@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'D2Coding';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/D2Coding.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
 	background: #002B36;
 	padding: 20px 50px;
@@ -12,11 +19,11 @@ textarea {
 	color: #fff;
 	padding: 0px;
 	width: 100%;
-	height: 100%;
-	font-family: monospace;
+	height: calc(100% - 37px);
+	font-family: 'D2Coding', monospace;
 	outline: none;
 	resize: none;
-	font-size: 13px;
+	font-size: 14px;
 	margin-top: 0;
 	margin-bottom: 0;
 }
@@ -31,7 +38,7 @@ textarea {
 	left: 0px;
 	width: 30px; /* 30 to get 20 away from box */
 	font-size: 13px;
-	font-family: monospace;
+	font-family: 'D2Coding', monospace;
 	text-align: right;
 	user-select: none;
 }
@@ -50,6 +57,8 @@ textarea {
 
 #box code {
 	padding: 0px;
+	padding-bottom: 57px;
+	font-family: 'D2Coding', monospace;
 	background: transparent !important; /* don't hide hastebox */
 }
 
@@ -63,29 +72,16 @@ textarea {
 }
 
 #box1 {
-	padding: 5px;
-	text-align: center;
-	background: #00222b;
-}
-
-#box2 {
 	background: #08323c;
 	font-size: 0px;
 	padding: 0px 5px;
+  width: 100%;
+  position: fixed;
+  bottom: 0pt;
+  left: 0pt;
 }
 
-#box1 a.logo, #box1 a.logo:visited {
-	display: inline-block;
-	background: url(logo.png);
-	width: 126px;
-	height: 42px;
-}
-
-#box1 a.logo:hover {
-	background-position: 0 bottom;
-}
-
-#box2 .function {
+#box1 .function {
 	background: url(function-icons.png);
 	width: 32px;
 	height: 37px;
@@ -93,11 +89,11 @@ textarea {
 	position: relative;
 }
 
-#box2 .link embed {
+#box1 .link embed {
 	vertical-align: bottom; /* fix for zeroClipboard style */
 }
 
-#box2 .function.enabled:hover {
+#box1 .function.enabled:hover {
 	cursor: hand;
 	cursor: pointer;
 }
@@ -114,45 +110,49 @@ textarea {
 	right: 0px;
 }
 
-#box3, #messages li {
+#box2, #messages li {
 	background: #173e48;
+	width: 120px;
 	font-family: Helvetica, sans-serif;
-	font-size: 12px;
-	line-height: 14px;
-	padding: 10px 15px;
+	font-size: 11px;
+	line-height: 8.5px;
+	padding: 10px 13px;
 	user-select: none;
+  position: fixed;
+  bottom: 0pt;
+  right: 0pt;
 }
 
-#box3 .label, #messages li {
+#box2 .label, #messages li {
 	color: #fff;
 	font-weight: bold;
 }
 
-#box3 .shortcut {
+#box2 .shortcut {
 	color: #c4dce3;
 	font-weight: normal;
 }
 
-#box2 .function.save { background-position: -5px top; }
-#box2 .function.enabled.save { background-position: -5px center; }
-#box2 .function.enabled.save:hover { background-position: -5px bottom; }
+#box1 .function.save { background-position: -5px top; }
+#box1 .function.enabled.save { background-position: -5px center; }
+#box1 .function.enabled.save:hover { background-position: -5px bottom; }
 
-#box2 .function.new { background-position: -42px top; }
-#box2 .function.enabled.new { background-position: -42px center; }
-#box2 .function.enabled.new:hover { background-position: -42px bottom; }
+#box1 .function.new { background-position: -42px top; }
+#box1 .function.enabled.new { background-position: -42px center; }
+#box1 .function.enabled.new:hover { background-position: -42px bottom; }
 
-#box2 .function.duplicate { background-position: -79px top; }
-#box2 .function.enabled.duplicate { background-position: -79px center; }
-#box2 .function.enabled.duplicate:hover { background-position: -79px bottom; }
+#box1 .function.duplicate { background-position: -79px top; }
+#box1 .function.enabled.duplicate { background-position: -79px center; }
+#box1 .function.enabled.duplicate:hover { background-position: -79px bottom; }
 
-#box2 .function.raw { background-position: -116px top; }
-#box2 .function.enabled.raw { background-position: -116px center; }
-#box2 .function.enabled.raw:hover { background-position: -116px bottom; }
+#box1 .function.raw { background-position: -116px top; }
+#box1 .function.enabled.raw { background-position: -116px center; }
+#box1 .function.enabled.raw:hover { background-position: -116px bottom; }
 
-#box2 .function.twitter { background-position: -153px top; }
-#box2 .function.enabled.twitter { background-position: -153px center; }
-#box2 .function.enabled.twitter:hover { background-position: -153px bottom; }
-#box2 .button-picture{ border-width: 0; font-size: inherit; }
+#box1 .function.twitter { background-position: -153px top; }
+#box1 .function.enabled.twitter { background-position: -153px center; }
+#box1 .function.enabled.twitter:hover { background-position: -153px bottom; }
+#box1 .button-picture{ border-width: 0; font-size: inherit; }
 
 #messages {
 	position:fixed;
