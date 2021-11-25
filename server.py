@@ -7,6 +7,8 @@ from importlib import import_module
 
 from fastapi import FastAPI, Request, Response
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import PlainTextResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 from lib.config import Config
 from lib.document_handler import DocumentHandler
@@ -69,10 +71,13 @@ documentHandler = DocumentHandler(Config({
 
 
 app = FastAPI()
+app.router.redirect_slashes = False
+
+templates = Jinja2Templates(directory="static")
 
 ## first look at API calls
 ## get raw documents - support getting with extension
-@app.get("/raw/{id}")
+@app.get("/raw/{id}", response_class=PlainTextResponse)
 async def raw_get(request: Request, response: Response):
     return documentHandler.handleRawGet(request, response, config)
 
@@ -96,6 +101,13 @@ async def docs_head(request: Request, response: Response):
 
 
 ## And match index
+@app.get("/{id}", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request":request})
+
+
+## Otherwise, try to match static files
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
 
 logger.info('listening on ' + config.host + ':' + str(config.port))
