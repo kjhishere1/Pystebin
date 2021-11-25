@@ -103,13 +103,14 @@ async def docs_head(request: Request, response: Response):
 
 
 ## And match index
+@app.get("/", response_class=HTMLResponse)
 @app.get("/{id}", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request":request})
 
 
 ## Otherwise, try to match static files
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+app.mount("/static/", StaticFiles(directory="static", html=False), name="static")
 
 
 logger.info('listening on ' + config.host + ':' + str(config.port))
