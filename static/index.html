@@ -9,7 +9,7 @@
 
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script type="text/javascript" src="/static/highlight.min.js"></script>
-		<script type="text/javascript" src="/static/application.min.js"></script>
+		<script type="text/javascript" src="/static/application.js"></script>
 
 		<meta name="robots" content="noindex,nofollow"/>
 
@@ -31,7 +31,7 @@
 			}, 1000);
 			// Construct app and load initial path
 			$(function() {
-				app = new haste('hastebin', { twitter: true });
+				app = new haste('hastebin', { twitter: false });
 				handlePop({ target: window });
 			});
 		</script>

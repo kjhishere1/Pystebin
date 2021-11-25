@@ -20,11 +20,20 @@ with open(configPath, 'r', encoding='UTF-8') as config_file:
     config = Config(json.loads(config_file.read()))
 config.port = os.getenv('PORT') or config.port or 7777
 config.host = os.getenv('HOST') or config.host or 'localhost'
+config.subfolder = config.subfolder or ''
 
 
 ## Set up the logger
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+
+
+## Config Subfolder domain js
+with open('static/application.js', 'r', encoding='UTF-8') as js_file:
+    js_code = js_file.read().split('\n')
+with open('static/application.js', 'w', encoding='UTF-8') as js_file:
+    js_code[6] = f'  subfolder = "{config.subfolder}";'
+    js_file.write('\n'.join(js_code))
 
 
 ## build the store from the config on-demand - so that we don't load it
@@ -78,33 +87,33 @@ templates = Jinja2Templates(directory="static")
 
 ## first look at API calls
 ## get raw documents - support getting with extension
-@app.get("/raw/{id}", response_class=PlainTextResponse)
+@app.get(config.subfolder + "/raw/{id}", response_class=PlainTextResponse)
 async def raw_get(request: Request, response: Response):
     return documentHandler.handleRawGet(request, response, config)
 
-@app.head("/raw/{id}")
+@app.head(config.subfolder + "/raw/{id}")
 async def raw_head(request: Request, response: Response):
     return documentHandler.handleRawGet(request, response, config)
 
 ## add documents
-@app.post("/documents")
+@app.post(config.subfolder + "/documents")
 async def docs(request: Request, response: Response):
     buffer = await request.body()
     return documentHandler.handlePost(request, response, buffer)
 
 ## get documents
-@app.get("/documents/{id}")
+@app.get(config.subfolder + "/documents/{id}")
 async def docs_get(request: Request, response: Response):
     return documentHandler.handleGet(request, response, config)
 
-@app.head("/documents/{id}")
+@app.head(config.subfolder + "/documents/{id}")
 async def docs_head(request: Request, response: Response):
     return documentHandler.handleGet(request, response, config)
 
 
 ## And match index
-@app.get("/", response_class=HTMLResponse)
-@app.get("/{id}", response_class=HTMLResponse)
+@app.get(config.subfolder + "/", response_class=HTMLResponse)
+@app.get(config.subfolder + "/{id}", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request":request})
 
