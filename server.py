@@ -36,6 +36,18 @@ with open('static/application.js', 'w', encoding='UTF-8') as js_file:
     js_file.write('\n'.join(js_code))
 
 
+## Config Subfolder domain html file
+with open('static/index.html', 'r', encoding='UTF-8') as html_file:
+    html = html_file.read().split('\n')
+with open('static/index.html', 'w', encoding='UTF-8') as html_file:
+    html[6] = f'\t\t<link rel="stylesheet" type="text/css" href="{config.subfolder}/static/solarized_dark.css"/>'
+    html[7] = f'\t\t<link rel="stylesheet" type="text/css" href="{config.subfolder}/static/application.css"/>'
+    html[10] = f'\t\t<script type="text/javascript" src="{config.subfolder}/static/highlight.min.js"></script>'
+    html[11] = f'\t\t<script type="text/javascript" src="{config.subfolder}/static/application.js"></script>'
+    html[46] = f'\t\t\t\t<a href="{config.subfolder}/about.md" class="logo"></a>'
+    html_file.write('\n'.join(html))
+
+
 ## build the store from the config on-demand - so that we don't load it
 ## for statics
 if not config.storage:
@@ -119,7 +131,7 @@ async def index(request: Request):
 
 
 ## Otherwise, try to match static files
-app.mount("/static/", StaticFiles(directory="static", html=False), name="static")
+app.mount(config.subfolder + "/static/", StaticFiles(directory="static", html=False), name="static")
 
 
 logger.info('listening on ' + config.host + ':' + str(config.port))

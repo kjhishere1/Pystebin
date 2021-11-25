@@ -4,7 +4,7 @@
 
 var 
   haste_document = function() { this.locked = false; },
-  subfolder = "";
+  subfolder = "/haste";
 
 // Escapes HTML tag characters
 haste_document.prototype.htmlEscape = function(s) {
