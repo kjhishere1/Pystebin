@@ -10,7 +10,7 @@ class FileDocumentStore:
 
     def md5(self, str):
         md5sum = hashlib.md5()
-        md5sum.update(str)
+        md5sum.update(str.encode('utf-8'))
         return md5sum.hexdigest()
 
 
