@@ -1,0 +1,22 @@
+{
+  "host": "0.0.0.0",
+  "port": 7777,
+  "subfolder": "",
+  "subfolderRewrite": true,
+
+  "keyLength": 10,
+  "maxLength": 400000,
+  "recompressStaticAssets": true,
+
+  "keyGenerator": {
+    "type": "phonetic"
+  },
+
+  "storage": {
+    "type": "file"
+  },
+
+  "documents": {
+    "about": "./about.md"
+  }
+}
