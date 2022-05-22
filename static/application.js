@@ -4,7 +4,7 @@
 
 var 
   haste_document = function() { this.locked = false; },
-  subfolder = "";
+  subfolder = "/haste";
 
 // Escapes HTML tag characters
 haste_document.prototype.htmlEscape = function(s) {
@@ -100,7 +100,7 @@ var haste = function(appName, options) {
   this.configureButtons();
   // If twitter is disabled, hide the button
   if (!options.twitter) {
-    $('#box2 .twitter').hide();
+    $('#box1 .twitter').hide();
   }
 };
 
@@ -132,7 +132,7 @@ haste.prototype.fullKey = function() {
 // Set the key up for certain things to be enabled
 haste.prototype.configureKey = function(enable) {
   var $this, i = 0;
-  $('#box2 .function').each(function() {
+  $('#box1 .function').each(function() {
     $this = $(this);
     for (i = 0; i < enable.length; i++) {
       if ($this.hasClass(enable[i])) {
@@ -206,7 +206,7 @@ haste.prototype.removeLineNumbers = function() {
 // Load a document and show it
 haste.prototype.loadDocument = function(key) {
   // Split the key up
-  var parts = key.replace(subfolder.slice(1) + '/', '').split('.', 2);
+  var parts = key.replace('haste/', '').split('.', 2);
   // Ask for what we want
   var _this = this;
   _this.doc = new haste_document();
@@ -261,7 +261,7 @@ haste.prototype.configureButtons = function() {
   var _this = this;
   this.buttons = [
     {
-      $where: $('#box2 .save'),
+      $where: $('#box1 .save'),
       label: 'Save',
       shortcutDescription: 'control + s',
       shortcut: function(evt) {
@@ -274,7 +274,7 @@ haste.prototype.configureButtons = function() {
       }
     },
     {
-      $where: $('#box2 .new'),
+      $where: $('#box1 .new'),
       label: 'New',
       shortcut: function(evt) {
         return evt.ctrlKey && evt.keyCode === 78;
@@ -285,7 +285,7 @@ haste.prototype.configureButtons = function() {
       }
     },
     {
-      $where: $('#box2 .duplicate'),
+      $where: $('#box1 .duplicate'),
       label: 'Duplicate & Edit',
       shortcut: function(evt) {
         return _this.doc.locked && evt.ctrlKey && evt.keyCode === 68;
@@ -296,7 +296,7 @@ haste.prototype.configureButtons = function() {
       }
     },
     {
-      $where: $('#box2 .raw'),
+      $where: $('#box1 .raw'),
       label: 'Just Text',
       shortcut: function(evt) {
         return evt.ctrlKey && evt.shiftKey && evt.keyCode === 82;
@@ -307,7 +307,7 @@ haste.prototype.configureButtons = function() {
       }
     },
     {
-      $where: $('#box2 .twitter'),
+      $where: $('#box1 .twitter'),
       label: 'Twitter',
       shortcut: function(evt) {
         return _this.options.twitter && _this.doc.locked && evt.shiftKey && evt.ctrlKey && evt.keyCode == 84;
@@ -333,14 +333,14 @@ haste.prototype.configureButton = function(options) {
   });
   // Show the label
   options.$where.mouseenter(function() {
-    $('#box3 .label').text(options.label);
-    $('#box3 .shortcut').text(options.shortcutDescription || '');
-    $('#box3').show();
+    $('#box2 .label').text(options.label);
+    $('#box2 .shortcut').text(options.shortcutDescription || '');
+    $('#box2').show();
     $(this).append($('#pointer').remove().show());
   });
   // Hide the label
   options.$where.mouseleave(function() {
-    $('#box3').hide();
+    $('#box2').hide();
     $('#pointer').hide();
   });
 };

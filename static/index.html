@@ -4,12 +4,12 @@
 
 		<title>hastebin</title>
 		<meta charset="utf-8" />
-		<link rel="stylesheet" type="text/css" href="/static/solarized_dark.css"/>
-		<link rel="stylesheet" type="text/css" href="/static/application.css"/>
+		<link rel="stylesheet" type="text/css" href="https://hollu.me/hastebin/solarized_dark.css"/>
+		<link rel="stylesheet" type="text/css" href="https://hollu.me/hastebin/application.css"/>
 
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<script type="text/javascript" src="/static/highlight.min.js"></script>
-		<script type="text/javascript" src="/static/application.js"></script>
+		<script type="text/javascript" src="https://hollu.me/hastebin/highlight.min.js"></script>
+		<script type="text/javascript" src="https://hollu.me/hastebin/application.js"></script>
 
 		<meta name="robots" content="noindex,nofollow"/>
 
@@ -18,7 +18,7 @@
 			// Handle pops
 			var handlePop = function(evt) {
 				var path = evt.target.location.pathname;
-				if (path === '/') { app.newDocument(true); }
+				if (path === '/haste/') { app.newDocument(true); }
 				else { app.loadDocument(path.substring(1, path.length)); }
 			};
 			// Set up the pop state to handle loads, skipping the first load
@@ -40,20 +40,16 @@
 
 	<body>
 		<ul id="messages"></ul>
-
 		<div id="key">
 		  <div id="pointer" style="display:none;"></div>
 			<div id="box1">
-				<a href="/about.md" class="logo"></a>
-			</div>
-			<div id="box2">
 				<button class="save function button-picture">Save</button>
 				<button class="new function button-picture">New</button>
 				<button class="duplicate function button-picture">Duplicate & Edit</button>
 				<button class="raw function button-picture">Just Text</button>
 				<button class="twitter function button-picture">Twitter</button>
 			</div>
-			<div id="box3" style="display:none;">
+			<div id="box2" style="display:none;">
 				<div class="label"></div>
 				<div class="shortcut"></div>
 			</div>
